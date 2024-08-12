@@ -1,23 +1,30 @@
-import User from '@/lib/database/models/user.model';
+import { connectToDatabase } from "../database";
+import Vote from "../database/models/vote.model";
 
-export const vote = async (candidateName: string, clerkId: string) => {
+
+export const vote = async (candidateName: string, userId: string) => {
   try {
-    const user = await User.findOne({ clerkId });
+    // Connect to the database
+    await connectToDatabase();
 
-    if (!user) {
-      return { success: false, message: "User not found" };
+    // Check if the user has already voted
+    const existingVote = await Vote.findOne({ userId });
+
+    if (existingVote) {
+      return { success: false, message: "You have already voted" };
     }
 
-    if (user.votedFor) {
-      return { success: false, message: "You have already voted for " + user.votedFor };
-    }
+    // Create a new vote entry
+    const newVote = new Vote({
+      userId,
+      candidateName,
+    });
 
-    user.votedFor = candidateName;
-    await user.save();
+    await newVote.save();
 
-    return { success: true, message: "Your vote for " + candidateName + " has been recorded successfully." };
+    return { success: true, message: `You voted for ${candidateName}` };
   } catch (error) {
-    console.error('Error recording vote:', error);
+    console.error("Error recording vote:", error);
     return { success: false, message: "An error occurred while voting" };
   }
 };
