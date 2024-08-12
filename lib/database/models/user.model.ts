@@ -1,15 +1,24 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, Document } from 'mongoose';
 
-const UserSchema = new mongoose.Schema({
+interface IUser extends Document {
+  clerkId: string;
+  email: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  photo?: string;
+  votedFor?: string;  // Field to store the candidate the user voted for
+}
+
+const UserSchema: Schema = new Schema({
   clerkId: { type: String, required: true, unique: true },
-  email: { type: String, required: true, unique: true },
+  email: { type: String, required: true },
   username: { type: String, required: true },
-  firstName: { type: String },
-  lastName: { type: String },
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
   photo: { type: String },
-  votedFor: { type: String, default: null }, // This field will store the candidate's name
+  votedFor: { type: String, default: null },  // Default is null, meaning the user hasn't voted yet
 });
 
-const User = mongoose.models.User || mongoose.model("User", UserSchema);
-
+const User = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
 export default User;
