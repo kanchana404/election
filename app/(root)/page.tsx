@@ -75,7 +75,7 @@ const page = () => {
               />
             </div>
             <CardFooter className="mt-3 text-center">
-              <Button className="w-full bg-red-500 text-white py-2 rounded-full hover:bg-red-600">
+              <Button className="w-full bg-yellow-500 text-white py-2 rounded-full hover:bg-yellow-600">
                 Vote
               </Button>
             </CardFooter>
