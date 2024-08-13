@@ -108,6 +108,7 @@ const VotingPage = () => {
         <SignedOut>
           <div className="text-center mt-10">
             <p className="text-xl text-red-600">Please sign in to vote.</p>
+            {/* <Button className="mt-4" asChild> */}
           </div>
         </SignedOut>
       </div>
