@@ -7,6 +7,7 @@ import Image from "next/image";
 import { SignedIn, SignedOut, useUser } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import VoteCounts from "@/components/VoteCount";
 
 const VotingPage = () => {
   const { user } = useUser();
@@ -32,7 +33,11 @@ const VotingPage = () => {
       }
     };
 
-    checkVoteStatus();
+    if (user) {
+      checkVoteStatus();
+    } else {
+      setLoading(false); // Skip loading if the user is not signed in
+    }
   }, [user]);
 
   const handleVote = async (candidateName: string) => {
@@ -113,6 +118,10 @@ const VotingPage = () => {
                 </CardFooter>
               </Card>
             ))}
+          </div>
+
+          <div>
+            <VoteCounts />
           </div>
         </SignedIn>
 
