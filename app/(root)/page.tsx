@@ -7,6 +7,7 @@ import Image from "next/image";
 import { SignedIn, SignedOut, useUser } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import VoteCountsChart from "@/components/VoteCount";
 
 
 
@@ -121,9 +122,9 @@ const VotingPage = () => {
             ))}
           </div>
 
-          {/* <div>
+          <div>
             <VoteCountsChart />
-          </div> */}
+          </div>
         </SignedIn>
 
         <SignedOut>
