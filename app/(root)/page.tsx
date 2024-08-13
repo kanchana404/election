@@ -7,22 +7,27 @@ import Image from "next/image";
 import { SignedIn, SignedOut, useUser } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import VoteCounts from "@/components/VoteCount";
-
 
 const VotingPage = () => {
   const { user } = useUser();
   const [hasVoted, setHasVoted] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const checkVoteStatus = async () => {
       if (user) {
         try {
           const response = await fetch(`/api/vote/status?userId=${user.id}`);
-          const data = await response.json();
-          setHasVoted(data.hasVoted);
+          if (response.ok) {
+            const data = await response.json();
+            setHasVoted(data.hasVoted);
+          } else {
+            console.error("Failed to fetch vote status");
+          }
         } catch (error) {
           console.error("Error checking vote status:", error);
+        } finally {
+          setLoading(false);
         }
       }
     };
@@ -58,6 +63,10 @@ const VotingPage = () => {
       Swal.fire("Error", "An error occurred while voting", "error");
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
@@ -105,15 +114,13 @@ const VotingPage = () => {
               </Card>
             ))}
           </div>
-
-          {/* <div className="mt-8">
-            <VoteCounts />
-          </div> */}
         </SignedIn>
 
         <SignedOut>
-          <div className="text-center mt-10">
-            <p className="text-xl text-red-600">Please sign in to vote.</p>
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="text-center">
+              <p className="text-xl text-red-600">Please sign in to vote.</p>
+            </div>
           </div>
         </SignedOut>
       </div>
