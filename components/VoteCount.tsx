@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { TrendingUp } from "lucide-react";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Label } from "recharts";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Label, Legend } from "recharts";
 import {
   Card,
   CardContent,
@@ -40,10 +40,24 @@ const VoteCountsChart = () => {
 
   const totalVotes = voteCounts.reduce((acc, curr) => acc + curr.count, 0);
 
+  const renderCustomLegend = (value: string, entry: any) => {
+    const { color } = entry;
+
+    return (
+      <span className="flex items-center gap-2">
+        <span
+          className="inline-block w-4 h-4 rounded-full"
+          style={{ backgroundColor: color }}
+        />
+        <span className="text-black">{value}</span>
+      </span>
+    );
+  };
+
   return (
     <Card className="flex flex-col shadow-lg">
       <CardHeader className="items-center text-center pb-4 border-b border-gray-200">
-        <CardTitle className="text-3xl font-semibold text-gray-800">Vote Distribution</CardTitle>
+        <CardTitle className="text-3xl font-semibold text-gray-800">මනාප සටහන</CardTitle>
         <CardDescription className="text-sm text-gray-500">
           See how the votes are distributed among the candidates
         </CardDescription>
@@ -73,6 +87,18 @@ const VoteCountsChart = () => {
               />
             </Pie>
             <Tooltip />
+            <Legend
+              formatter={renderCustomLegend}
+              layout="vertical"
+              align="right"
+              verticalAlign="middle"
+              wrapperStyle={{
+                top: 0,
+                right: 0,
+                padding: 10,
+                fontSize: '14px',
+              }}
+            />
           </PieChart>
         </ResponsiveContainer>
       </CardContent>
