@@ -1,14 +1,17 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, model, models } from 'mongoose';
 
-interface IVote extends Document {
-  userId: string;
-  candidateName: string;
-}
-
-const VoteSchema: Schema = new Schema({
-  userId: { type: String, required: true },
-  candidateName: { type: String, required: true },
+const voteSchema = new Schema({
+  userId: {
+    type: String, // Must be String, not ObjectId
+    required: true,
+    unique: true, // To ensure a user can only vote once
+  },
+  candidateName: {
+    type: String,
+    required: true,
+  },
 });
 
-const Vote = mongoose.models.Vote || mongoose.model<IVote>('Vote', VoteSchema);
+const Vote = models.Vote || model('Vote', voteSchema);
+
 export default Vote;

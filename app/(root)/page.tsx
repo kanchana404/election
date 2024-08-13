@@ -5,22 +5,56 @@ import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import { SignedIn, SignedOut, useUser } from "@clerk/nextjs";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 
 const VotingPage = () => {
   const { user } = useUser();
+  const [hasVoted, setHasVoted] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log("User object:", user);
+    const checkVoteStatus = async () => {
+      if (user) {
+        try {
+          const response = await fetch(`/api/vote/status?userId=${user.id}`);
+          const data = await response.json();
+          setHasVoted(data.hasVoted);
+        } catch (error) {
+          console.error("Error checking vote status:", error);
+        }
+      }
+    };
+
+    checkVoteStatus();
   }, [user]);
 
   const handleVote = async (candidateName: string) => {
     if (!user) {
-      console.log("User not found");
+      Swal.fire("Error", "User not found", "error");
       return;
     }
 
-    console.log("Voted for:", candidateName);
+    try {
+      const response = await fetch("/api/vote", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId: user.id, candidateName }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        Swal.fire("Success", data.message, "success");
+        setHasVoted(true);
+      } else {
+        Swal.fire("Error", data.message, "error");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      Swal.fire("Error", "An error occurred while voting", "error");
+    }
   };
 
   return (
@@ -57,10 +91,13 @@ const VotingPage = () => {
                 </div>
                 <CardFooter className="mt-3 text-center">
                   <Button
-                    className="w-full bg-blue-500 text-white py-2 rounded-full hover:bg-blue-600"
+                    className={`w-full text-white py-2 rounded-full ${
+                      hasVoted ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
+                    }`}
                     onClick={() => handleVote(candidate.name)}
+                    disabled={hasVoted}
                   >
-                    Vote
+                    {hasVoted ? "Voted" : "Vote"}
                   </Button>
                 </CardFooter>
               </Card>
