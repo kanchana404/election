@@ -1,4 +1,4 @@
-"use client"; // Ensures the component is a Client Component
+"use client";
 
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,8 @@ import Image from "next/image";
 import { SignedIn, SignedOut, useUser } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import VoteCounts from "@/components/VoteCount";
+
 
 const VotingPage = () => {
   const { user } = useUser();
@@ -103,12 +105,15 @@ const VotingPage = () => {
               </Card>
             ))}
           </div>
+
+          {/* <div className="mt-8">
+            <VoteCounts />
+          </div> */}
         </SignedIn>
 
         <SignedOut>
           <div className="text-center mt-10">
             <p className="text-xl text-red-600">Please sign in to vote.</p>
-            {/* <Button className="mt-4" asChild> */}
           </div>
         </SignedOut>
       </div>
