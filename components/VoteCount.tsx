@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { TrendingUp } from "lucide-react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Label, Legend } from "recharts";
@@ -16,20 +14,22 @@ const VoteCountsChart = () => {
   const [voteCounts, setVoteCounts] = React.useState<{ candidateName: string; count: number }[]>([]);
   const [loading, setLoading] = React.useState(true);
 
-  React.useEffect(() => {
-    const fetchVoteCounts = async () => {
-      try {
-        const response = await fetch("/api/vote/count");
-        const data = await response.json();
-        setVoteCounts(data);
-      } catch (error) {
-        console.error("Error fetching vote counts:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchVoteCounts = async () => {
+    try {
+      const response = await fetch("/api/vote/count");
+      const data = await response.json();
+      setVoteCounts(data);
+    } catch (error) {
+      console.error("Error fetching vote counts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  React.useEffect(() => {
     fetchVoteCounts();
+    const interval = setInterval(fetchVoteCounts, 5000); // Poll every 5 seconds
+    return () => clearInterval(interval); // Clean up the interval on unmount
   }, []);
 
   if (loading) {
