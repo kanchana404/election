@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { TrendingUp } from "lucide-react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Label, Legend } from "recharts";
@@ -14,23 +16,22 @@ const VoteCountsChart = () => {
   const [voteCounts, setVoteCounts] = React.useState<{ candidateName: string; count: number }[]>([]);
   const [loading, setLoading] = React.useState(true);
 
-  const fetchVoteCounts = async () => {
-    try {
-      const response = await fetch("/api/vote/count");
-      const data = await response.json();
-      setVoteCounts(data);
-    } catch (error) {
-      console.error("Error fetching vote counts:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Fetch data from the database every time the component is rendered
   React.useEffect(() => {
-    fetchVoteCounts();
-    const interval = setInterval(fetchVoteCounts, 5000); // Poll every 5 seconds
-    return () => clearInterval(interval); // Clean up the interval on unmount
-  }, []);
+    const fetchVoteCounts = async () => {
+      try {
+        const response = await fetch("/api/vote/count");
+        const data = await response.json();
+        setVoteCounts(data);  // Immediately use the data for rendering
+      } catch (error) {
+        console.error("Error fetching vote counts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVoteCounts(); // Fetch the data when the component loads
+  }, []); // Empty dependency array means it only runs on mount
 
   if (loading) {
     return <div>Loading vote counts...</div>;
@@ -57,7 +58,7 @@ const VoteCountsChart = () => {
   return (
     <Card className="flex flex-col shadow-lg">
       <CardHeader className="items-center text-center pb-4 border-b border-gray-200">
-        <CardTitle className="text-3xl font-semibold text-gray-800">මනාප සටහන</CardTitle>
+        <CardTitle className="text-3xl font-semibold text-gray-800">Vote Distribution</CardTitle>
         <CardDescription className="text-sm text-gray-500">
           See how the votes are distributed among the candidates
         </CardDescription>
