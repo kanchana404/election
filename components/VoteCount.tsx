@@ -23,6 +23,7 @@ const VoteCountsChart = () => {
       } finally {
         setLoading(false);
       }
+      //wadasfas
     };
 
     fetchVoteCounts(); // Fetch the data when the component loads
