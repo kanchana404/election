@@ -2,14 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import Vote from "@/lib/database/models/vote.model";
 import { connectToDatabase } from "@/lib/database";
 
-// Updated candidate names including Wijedasa Rajapaksa
-const candidates = [
-  "Anura Kumara",
-  "Ranil Wickremesinghe",
-  "Sajith Premadasa",
-  "Namal Rajapaksa",
-  "Wijedasa Rajapaksa"
-];
+// Example candidate names
+const candidates = ["Anura Kumara", "Ranil Wickremesinghe", "Sajith Premadasa", "Namal Rajapaksa", "Wijedasa Rajapaksa"];
 
 export async function GET(req: NextRequest) {
   await connectToDatabase();
@@ -32,7 +26,15 @@ export async function GET(req: NextRequest) {
       count: voteCountsMap[candidate] || 0,
     }));
 
-    return NextResponse.json(allCandidates, { status: 200 });
+    const response = NextResponse.json(allCandidates, { status: 200 });
+    
+    // Set headers to prevent caching
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+    response.headers.set('Surrogate-Control', 'no-store');
+
+    return response;
   } catch (error) {
     console.error("Error fetching vote counts:", error);
     return NextResponse.json({ error: "Failed to fetch vote counts" }, { status: 500 });

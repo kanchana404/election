@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Label, Legend } from "recharts";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,25 +8,25 @@ const VoteCountsChart = () => {
   const [voteCounts, setVoteCounts] = React.useState<{ candidateName: string; count: number }[]>([]);
   const [loading, setLoading] = React.useState(true);
 
-  const fetchVoteCounts = async () => {
-    try {
-      const response = await fetch("/api/vote/count");
-      const data = await response.json();
-      setVoteCounts(data);
-    } catch (error) {
-      console.error("Error fetching vote counts:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Fetch data from the database every time the component is rendered
   React.useEffect(() => {
-    fetchVoteCounts(); // Initial fetch when the component mounts
+    const fetchVoteCounts = async () => {
+      try {
+        const response = await fetch("/api/vote/count", {
+          method: "GET",
+          cache: "no-store",  // Ensure no cache is used on the client-side as well
+        });
+        const data = await response.json();
+        setVoteCounts(data);  // Immediately use the data for rendering
+      } catch (error) {
+        console.error("Error fetching vote counts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    const interval = setInterval(fetchVoteCounts, 5000); // Poll every 5 seconds
-
-    return () => clearInterval(interval); // Cleanup interval on component unmount
-  }, []);
+    fetchVoteCounts(); // Fetch the data when the component loads
+  }, []); // Empty dependency array means it only runs on mount
 
   if (loading) {
     return <div>Loading vote counts...</div>;
