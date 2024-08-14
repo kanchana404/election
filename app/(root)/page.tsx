@@ -83,7 +83,7 @@ const VotingPage = () => {
         </p>
 
         <SignedIn>
-          <div className="flex flex-wrap justify-center gap-6 p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-4 justify-center">
             {[
               { name: "Anura Kumara", image: "/anura.png" },
               { name: "Ranil Wickremesinghe", image: "/ranil.png" },
@@ -91,7 +91,7 @@ const VotingPage = () => {
               { name: "Namal Rajapaksa", image: "/namal.png" },
               { name: "Wijedasa Rajapaksa", image: "/wijedasa.jpg" },
             ].map((candidate) => (
-              <Card key={candidate.name} className="bg-white shadow-md rounded-lg overflow-hidden flex-1 max-w-[300px]">
+              <Card key={candidate.name} className="bg-white shadow-md rounded-lg overflow-hidden">
                 <CardHeader className="text-center">
                   <CardTitle className="text-xl font-semibold">
                     {candidate.name}
