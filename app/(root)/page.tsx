@@ -9,8 +9,6 @@ import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import VoteCountsChart from "@/components/VoteCount";
 
-
-
 const VotingPage = () => {
   const { user } = useUser();
   const [hasVoted, setHasVoted] = useState<boolean>(false);
@@ -91,6 +89,7 @@ const VotingPage = () => {
               { name: "Ranil Wickremesinghe", image: "/ranil.png" },
               { name: "Sajith Premadasa", image: "/sajith.png" },
               { name: "Namal Rajapaksa", image: "/namal.png" },
+              { name: "Wijedasa Rajapaksa", image: "/wijedasa.jpg" },
             ].map((candidate) => (
               <Card key={candidate.name} className="bg-white shadow-md rounded-lg overflow-hidden">
                 <CardHeader className="text-center">

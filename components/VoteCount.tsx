@@ -37,7 +37,7 @@ const VoteCountsChart = () => {
     return <div>Loading vote counts...</div>;
   }
 
-  const COLORS = ["#8B0000", "#228B22", "#FFD700", "#FF0000"]; // Dark red, green, yellow, red
+  const COLORS = ["#8B0000", "#228B22", "#FFD700", "#FF0000", "#00008B"]; // Added dark blue for Wijedasa Rajapaksa
 
   const totalVotes = voteCounts.reduce((acc, curr) => acc + curr.count, 0);
 

@@ -2,8 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import Vote from "@/lib/database/models/vote.model";
 import { connectToDatabase } from "@/lib/database";
 
-// Example candidate names
-const candidates = ["Anura Kumara", "Ranil Wickremesinghe", "Sajith Premadasa", "Namal Rajapaksa"];
+// Updated candidate names including Wijedasa Rajapaksa
+const candidates = [
+  "Anura Kumara",
+  "Ranil Wickremesinghe",
+  "Sajith Premadasa",
+  "Namal Rajapaksa",
+  "Wijedasa Rajapaksa"
+];
 
 export async function GET(req: NextRequest) {
   await connectToDatabase();
