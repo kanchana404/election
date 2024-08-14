@@ -51,7 +51,7 @@ const VoteCountsChart = () => {
     const { color } = entry;
 
     return (
-      <span className="flex items-center gap-2">
+      <span className="hidden sm:flex items-center gap-2">
         <span
           className="inline-block w-4 h-4 rounded-full"
           style={{ backgroundColor: color }}
@@ -78,8 +78,8 @@ const VoteCountsChart = () => {
               nameKey="candidateName"
               cx="50%"
               cy="50%"
-              innerRadius={70}
-              outerRadius={140}
+              innerRadius="40%" // Use percentage for responsiveness
+              outerRadius="70%" // Use percentage for responsiveness
               fill="#8884d8"
               stroke="none"
               paddingAngle={3}
