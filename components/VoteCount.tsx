@@ -2,7 +2,14 @@
 
 import * as React from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Label, Legend } from "recharts";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const VoteCountsChart = () => {
   const [voteCounts, setVoteCounts] = React.useState<{ candidateName: string; count: number }[]>([]);
@@ -13,30 +20,23 @@ const VoteCountsChart = () => {
     try {
       const response = await fetch("/api/vote/count", {
         method: "GET",
-        cache: "no-store",  // Ensure no cache is used on the client-side
+        cache: "no-store", // Ensure no cache is used on the client-side
       });
       if (!response.ok) {
         throw new Error(`Error fetching vote counts: ${response.statusText}`);
       }
       const data = await response.json();
-      setVoteCounts(data);  // Update state with the latest data
+      setVoteCounts(data); // Update state with the latest data
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      setLoading(false); // Set loading to false after data is fetched
     }
   };
 
-  // Implement polling using useEffect and setInterval
   React.useEffect(() => {
-    fetchVoteCounts(); // Initial fetch when component mounts
-
-    const intervalId = setInterval(() => {
-      fetchVoteCounts(); // Fetch data every 10 seconds
-    }, 10000); // 10000 milliseconds = 10 seconds
-
-    // Cleanup interval on component unmount
-    return () => clearInterval(intervalId);
+    setLoading(true); // Set loading to true when the component mounts or reloads
+    fetchVoteCounts(); // Fetch data when the component loads or reloads
   }, []); // Empty dependency array ensures this runs once when component mounts
 
   if (loading) {
