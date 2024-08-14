@@ -52,10 +52,7 @@ const VoteCountsChart = () => {
 
     return (
       <span className="hidden sm:flex items-center gap-2">
-        <span
-          className="inline-block w-4 h-4 rounded-full"
-          style={{ backgroundColor: color }}
-        />
+       
         <span className="text-black">{value}</span>
       </span>
     );
