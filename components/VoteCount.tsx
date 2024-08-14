@@ -1,43 +1,36 @@
-"use client";
-
 import * as React from "react";
-import { TrendingUp } from "lucide-react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Label, Legend } from "recharts";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 const VoteCountsChart = () => {
   const [voteCounts, setVoteCounts] = React.useState<{ candidateName: string; count: number }[]>([]);
   const [loading, setLoading] = React.useState(true);
 
-  // Fetch data from the database every time the component is rendered
-  React.useEffect(() => {
-    const fetchVoteCounts = async () => {
-      try {
-        const response = await fetch("/api/vote/count");
-        const data = await response.json();
-        setVoteCounts(data);  // Immediately use the data for rendering
-      } catch (error) {
-        console.error("Error fetching vote counts:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchVoteCounts = async () => {
+    try {
+      const response = await fetch("/api/vote/count");
+      const data = await response.json();
+      setVoteCounts(data);
+    } catch (error) {
+      console.error("Error fetching vote counts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchVoteCounts(); // Fetch the data when the component loads
-  }, []); // Empty dependency array means it only runs on mount
+  React.useEffect(() => {
+    fetchVoteCounts(); // Initial fetch when the component mounts
+
+    const interval = setInterval(fetchVoteCounts, 5000); // Poll every 5 seconds
+
+    return () => clearInterval(interval); // Cleanup interval on component unmount
+  }, []);
 
   if (loading) {
     return <div>Loading vote counts...</div>;
   }
 
-  const COLORS = ["#8B0000", "#228B22", "#FFD700", "#FF0000", "#00008B"]; // Added dark blue for Wijedasa Rajapaksa
+  const COLORS = ["#8B0000", "#228B22", "#FFD700", "#FF0000", "#800080"]; // Added color for Wijedasa Rajapaksa
 
   const totalVotes = voteCounts.reduce((acc, curr) => acc + curr.count, 0);
 
@@ -105,7 +98,7 @@ const VoteCountsChart = () => {
       </CardContent>
       <CardFooter className="flex flex-col items-center gap-2 text-sm">
         <div className="flex items-center gap-2 font-medium leading-none text-gray-700">
-          Total Votes Recorded <TrendingUp className="h-4 w-4 text-green-500" />
+          Total Votes Recorded
         </div>
         <div className="text-center text-gray-500">
           Each slice represents the percentage of votes each candidate received.

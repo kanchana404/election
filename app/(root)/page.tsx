@@ -121,9 +121,9 @@ const VotingPage = () => {
             ))}
           </div>
 
-          {/* <div>
+          <div>
             <VoteCountsChart />
-          </div> */}
+          </div>
         </SignedIn>
 
         <SignedOut>
