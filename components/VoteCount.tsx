@@ -8,32 +8,42 @@ const VoteCountsChart = () => {
   const [voteCounts, setVoteCounts] = React.useState<{ candidateName: string; count: number }[]>([]);
   const [loading, setLoading] = React.useState(true);
 
-  // Fetch data from the database every time the component is rendered
-  React.useEffect(() => {
-    const fetchVoteCounts = async () => {
-      try {
-        const response = await fetch("/api/vote/count", {
-          method: "GET",
-          cache: "no-store",  // Ensure no cache is used on the client-side as well
-        });
-        const data = await response.json();
-        setVoteCounts(data);  // Immediately use the data for rendering
-      } catch (error) {
-        console.error("Error fetching vote counts:", error);
-      } finally {
-        setLoading(false);
+  // Function to fetch vote counts from the server
+  const fetchVoteCounts = async () => {
+    try {
+      const response = await fetch("/api/vote/count", {
+        method: "GET",
+        cache: "no-store",  // Ensure no cache is used on the client-side
+      });
+      if (!response.ok) {
+        throw new Error(`Error fetching vote counts: ${response.statusText}`);
       }
-      //wadasfas
-    };
+      const data = await response.json();
+      setVoteCounts(data);  // Update state with the latest data
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchVoteCounts(); // Fetch the data when the component loads
-  }, []); // Empty dependency array means it only runs on mount
+  // Implement polling using useEffect and setInterval
+  React.useEffect(() => {
+    fetchVoteCounts(); // Initial fetch when component mounts
+
+    const intervalId = setInterval(() => {
+      fetchVoteCounts(); // Fetch data every 10 seconds
+    }, 10000); // 10000 milliseconds = 10 seconds
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []); // Empty dependency array ensures this runs once when component mounts
 
   if (loading) {
     return <div>Loading vote counts...</div>;
   }
 
-  const COLORS = ["#8B0000", "#228B22", "#FFD700", "#FF0000", "#800080"]; // Added color for Wijedasa Rajapaksa
+  const COLORS = ["#8B0000", "#228B22", "#FFD700", "#FF0000", "#800080"]; // Colors for the pie chart slices
 
   const totalVotes = voteCounts.reduce((acc, curr) => acc + curr.count, 0);
 
