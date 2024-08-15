@@ -61,7 +61,7 @@ const VoteCountsChart = () => {
   return (
     <Card className="flex flex-col shadow-lg">
       <CardHeader className="items-center text-center pb-4 border-b border-gray-200">
-        <CardTitle className="text-3xl font-semibold text-gray-800">Vote Distribution</CardTitle>
+        <CardTitle className="text-3xl font-semibold text-gray-800">චන්ද ප්‍රථිපල</CardTitle>
         <CardDescription className="text-sm text-gray-500">
           See how the votes are distributed among the candidates
         </CardDescription>
@@ -111,7 +111,7 @@ const VoteCountsChart = () => {
           Total Votes Recorded
         </div>
         <div className="text-center text-gray-500">
-          Each slice represents the percentage of votes each candidate received.
+          The votes will update every 2 hour
         </div>
       </CardFooter>
     </Card>
